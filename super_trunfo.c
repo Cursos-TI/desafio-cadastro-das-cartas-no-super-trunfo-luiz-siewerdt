@@ -9,14 +9,18 @@ typedef struct {
   float area;
   float pib;
   int pontosTuristicos;
+  float densidade;
+  float pibPerCapita;
 } Carta;
 
-void getInput(char *input, int inputSize) {
+void getInput(char *input, size_t inputSize) {
   if (fgets(input, inputSize, stdin)) {
     size_t strSize = strlen(input);
+    // Trocando o caractere de quebra de linha por nulo
     if (input[strSize - 1] == '\n' && strSize <= inputSize) {
       input[strSize - 1] = '\0';
     } else {
+      // Caso o input do usuário ultrapasse o tamanho maximo, limpa o buffer
       int ch;
       while ((ch = getchar()) != '\n' && ch != EOF)
         ;
@@ -56,6 +60,7 @@ Carta novaCarta(int numero) {
     printf("\n Digite o código: ");
     getInput(input, sizeof(input));
 
+    // Verifica se o primeiro caractere é do a ao H, o segundo se é 0, e o terceiro se o numero é do 1 ao 4
     if (isCharValid(&input[0], 65, 72, 1) && input[1] == '0' &&
         isCharValid(&input[2], 49, 52, 0)) {
       isValidCodigo = 1;
@@ -83,8 +88,28 @@ Carta novaCarta(int numero) {
   return c;
 }
 
+void calcularDensidade(Carta *c) {
+  c->densidade = (float)c->populacao / c->area;
+}
+
+void calcularPipPerCapita(Carta *c) {
+  c->pibPerCapita = c->pib / (float)c->populacao;
+}
+
+void cartaVitoriosa(Carta *c1, Carta *c2) {
+  printf("\n Densidade Carta 1: %.2f\n", c1->densidade);
+  printf("\n Densidade Carta 2: %.2f\n", c2->densidade);
+  printf("\n Resultado: ");
+  if (c1->densidade < c2->densidade) {
+    printf("Carta 1 venceu!!\n");
+  } else {
+    printf("Carta 2 venceu!! \n");
+  }
+}
+
+
 void exibirCarta(Carta *c, int numeroCarta) {
-  printf("\n --- Carta %i --- \n\n", numeroCarta);
+  printf("\n --- Carta %i --- \n", numeroCarta);
   printf("Estado: %c\n", c->estado);
   printf("Codigo da Carta: %s\n", c->codigoCarta);
   printf("Cidade: %s\n", c->cidade);
@@ -92,6 +117,8 @@ void exibirCarta(Carta *c, int numeroCarta) {
   printf("Área: %.2f km²\n", c->area);
   printf("PIB: %.2f bilhões\n", c->pib);
   printf("Pontos Turísticos: %d\n", c->pontosTuristicos);
+  printf("Densidade: %.2f habitantes por km²\n", c->densidade);
+  printf("PIB per Capita: %.2f\n\n", c->pibPerCapita);
 }
 
 
@@ -99,8 +126,17 @@ int main() {
   Carta carta = novaCarta(1);
   Carta carta2 = novaCarta(2);
 
+  calcularDensidade(&carta);
+  calcularDensidade(&carta2);
+
+  calcularPipPerCapita(&carta);
+  calcularPipPerCapita(&carta2);
+
+  cartaVitoriosa(&carta, &carta2);
+
   exibirCarta(&carta, 1);
   exibirCarta(&carta2, 2);
+
 
   return 0;
 }
