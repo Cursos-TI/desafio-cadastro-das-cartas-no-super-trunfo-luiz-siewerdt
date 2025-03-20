@@ -55,14 +55,12 @@ Carta novaCarta(int numero) {
   } while (!isValidEstado);
 
   do {
-    char input[10];
     printf("\n Digite o código: ");
-    getInput(input, sizeof(input));
-
-    if (isCharValid(&input[0], 65, 72, 1) && input[1] == '0' &&
-        isCharValid(&input[2], 49, 52, 0)) {
+    getInput(c.codigoCarta, sizeof(c.codigoCarta));
+    printf("\n%s", c.codigoCarta);
+    if (isCharValid(&c.codigoCarta[0], 65, 72, 1) && c.codigoCarta[1] == '0' &&
+        isCharValid(&c.codigoCarta[2], 49, 52, 0)) {
       isValidCodigo = 1;
-      c.estado = input[0];
     }
   } while (!isValidCodigo);
 
