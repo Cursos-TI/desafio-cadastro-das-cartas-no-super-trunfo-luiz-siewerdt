@@ -96,17 +96,6 @@ void calcularPipPerCapita(Carta *c) {
   c->pibPerCapita = c->pib / (float)c->populacao;
 }
 
-void cartaVitoriosa(Carta *c1, Carta *c2) {
-  printf("\n Densidade Carta 1: %.2f\n", c1->densidade);
-  printf("\n Densidade Carta 2: %.2f\n", c2->densidade);
-  printf("\n Resultado: ");
-  if (c1->densidade < c2->densidade) {
-    printf("Carta 1 venceu!!\n");
-  } else {
-    printf("Carta 2 venceu!! \n");
-  }
-}
-
 
 void exibirCarta(Carta *c, int numeroCarta) {
   printf("\n --- Carta %i --- \n", numeroCarta);
@@ -131,8 +120,6 @@ int main() {
 
   calcularPipPerCapita(&carta);
   calcularPipPerCapita(&carta2);
-
-  cartaVitoriosa(&carta, &carta2);
 
   exibirCarta(&carta, 1);
   exibirCarta(&carta2, 2);
