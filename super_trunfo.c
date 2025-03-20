@@ -11,16 +11,15 @@ typedef struct {
   int pontosTuristicos;
   float densidade;
   float pibPerCapita;
+  float superPoder;
 } Carta;
 
 void getInput(char *input, size_t inputSize) {
   if (fgets(input, inputSize, stdin)) {
     size_t strSize = strlen(input);
-    // Trocando o caractere de quebra de linha por nulo
     if (input[strSize - 1] == '\n' && strSize <= inputSize) {
       input[strSize - 1] = '\0';
     } else {
-      // Caso o input do usuário ultrapasse o tamanho maximo, limpa o buffer
       int ch;
       while ((ch = getchar()) != '\n' && ch != EOF)
         ;
@@ -60,7 +59,6 @@ Carta novaCarta(int numero) {
     printf("\n Digite o código: ");
     getInput(input, sizeof(input));
 
-    // Verifica se o primeiro caractere é do a ao H, o segundo se é 0, e o terceiro se o numero é do 1 ao 4
     if (isCharValid(&input[0], 65, 72, 1) && input[1] == '0' &&
         isCharValid(&input[2], 49, 52, 0)) {
       isValidCodigo = 1;
@@ -96,7 +94,6 @@ void calcularPipPerCapita(Carta *c) {
   c->pibPerCapita = c->pib / (float)c->populacao;
 }
 
-
 void exibirCarta(Carta *c, int numeroCarta) {
   printf("\n --- Carta %i --- \n", numeroCarta);
   printf("Estado: %c\n", c->estado);
@@ -110,6 +107,90 @@ void exibirCarta(Carta *c, int numeroCarta) {
   printf("PIB per Capita: %.2f\n\n", c->pibPerCapita);
 }
 
+void calcularSuperPoder(Carta *c) {
+  c->superPoder = (c->populacao + c->area + c->pib + c->pontosTuristicos +
+                   c->pibPerCapita) -
+                  c->densidade;
+}
+
+int compararRetorno(void *value1, void *value2) {
+  if (*(int *)value1 > *(int *)value2)
+    return 1; // Carta 1 ganha
+  if (*(int *)value1 < *(int *)value2)
+    return 2; // Carta 2 ganha
+  return 3;   // Empate
+}
+
+void compararCartas(Carta *c1, Carta *c2) {
+  int resultado;
+
+  printf("\n--- Comparação de Cartas ---\n");
+
+  resultado = compararRetorno(&c1->populacao, &c2->populacao);
+  printf("População: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->area, &c2->area);
+  printf("Área: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->pib, &c2->pib);
+  printf("PIB: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->pontosTuristicos, &c2->pontosTuristicos);
+  printf("Pontos Turísticos: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->densidade, &c2->densidade);
+  printf("Densidade: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->pibPerCapita, &c2->pibPerCapita);
+  printf("PIB per capita: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+
+  resultado = compararRetorno(&c1->superPoder, &c2->superPoder);
+  printf("Super Poder: ");
+  if (resultado == 1)
+    printf("Carta 1 ganhou!\n");
+  else if (resultado == 2)
+    printf("Carta 2 ganhou!\n");
+  else
+    printf("Empate!\n");
+}
+
+
 
 int main() {
   Carta carta = novaCarta(1);
@@ -121,9 +202,13 @@ int main() {
   calcularPipPerCapita(&carta);
   calcularPipPerCapita(&carta2);
 
+  calcularSuperPoder(&carta);
+  calcularSuperPoder(&carta2);
+
   exibirCarta(&carta, 1);
   exibirCarta(&carta2, 2);
 
+  compararCartas(&carta, &carta2);
 
   return 0;
 }
